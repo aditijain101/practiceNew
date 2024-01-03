@@ -1,7 +1,9 @@
 import React, {useState} from "react"
 import "./login.css"
 import axios from "axios"
-import { useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = ({ setLoginUser}) => {
 
@@ -27,6 +29,10 @@ const Login = ({ setLoginUser}) => {
             setLoginUser(res.data.user)
             history.push("/")
         })
+        .catch(error => {
+            console.error("Error:", error.message);
+            toast.error("Failed to log in. Please try again later.");
+        });
     }
 
     return (

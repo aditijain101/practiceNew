@@ -40,7 +40,7 @@ const Register = () => {
     }
 
     const register = () => {
-        const { name, email, password, reEnterPassword } = user
+        const { name, email, password, reEnterPassword,phone } = user
         if (name && email && password && (password === reEnterPassword)) {
             axios.post("http://localhost:9002/register", user)
                 .then(res => {

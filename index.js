@@ -33,19 +33,23 @@ const userListing = new mongoose.model("userListingSchema", userListingSchema)
 
 //Routes
 app.post("/login", (req, res) => {
-    const { email, password } = req.body
+    const { email, password } = req.body;
     User.findOne({ email: email }, (err, user) => {
-        if (user) {
-            if (password === user.password) {
-                res.send({ message: "Login Successfull", user: user })
-            } else {
-                res.send({ message: "Password didn't match" })
-            }
+        if (err) {
+            res.status(500).send({ message: "Server Error" });
         } else {
-            res.send({ message: "User not registered" })
+            if (user) {
+                if (password === user.password) {
+                    res.send({ message: "Login Successful", user: user });
+                } else {
+                    res.status(401).send({ message: "Password didn't match" });
+                }
+            } else {
+                res.status(404).send({ message: "User not found" });
+            }
         }
-    })
-})
+    });
+});
 app.put("/edit", (req, res) => {
     const { id, user } = req.body;
     userListing.updateOne({ _id: id }, user, (err, result) => {
@@ -109,7 +113,7 @@ app.post("/addUser", async (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-    const { name, email, password } = req.body
+    const { name, email, password ,phone,gender} = req.body
     User.findOne({ email: email }, (err, user) => {
         if (user) {
             res.send({ message: "User already registerd" })
