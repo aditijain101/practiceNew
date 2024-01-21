@@ -14,12 +14,13 @@ position="sticky">
     <Toolbar>
     
         <Tabs
-        sx={{ml:'auto'}}
+        sx={{justifyContent:"space-between",display:"flex"}}
          textColor='inherit'
           indicatorColor="secondary"
            value={value} 
            onChange={(e,val)=>setValue(val)}
            >
+            <Tab  LinkComponent={NavLink} to="/" label='Welcome To User DashBoard'/>
             <Tab  LinkComponent={NavLink} to="/add" label='Add Users'/>
 {/*             
             <Tab   LinkComponent={NavLink} to="/books" label='Books'/>

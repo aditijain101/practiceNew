@@ -77,12 +77,16 @@ app.delete("/delete/:id", (req, res) => {
       }
     });
   });
+  let PAGE_SIZE =5
 app.get("/listing", async (req, res) => {
     try {
-       
-        const { user } = req.query;
-    
-        const userlist = await userListing.find({ user: user });
+        const { user,page=1 } = req.query;
+        const skip = (page - 1) * PAGE_SIZE;
+
+        // const userlist = await userListing.find()
+        //     .skip(skip)
+        //     .limit(PAGE_SIZE);
+        const userlist = await userListing.find();
         res.status(200).json({ userlist: userlist });
     } catch (error) {
         // Handle errors if any occurred during the process

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import "./homepage.css"
 import Header from "../Header/header"
+import Table from "../Table/table"
 import ViewDetailModel from "./ViewDetailModel"
 import axios from "axios";
 import img1 from "../../images.jpg"
@@ -24,11 +25,17 @@ const Homepage = ({ setLoginUser, user }) => {
             }
         })
             .then(res => {
+                let dummy = [];
+                res?.data?.userlist.map((item, index) => {
+                    dummy.push({
+                        id: index + 1,
+                        ...item
+                    })
+                })
 
-               
-              
-                    setList(res.data.userlist);
-                   
+                setList(dummy);
+                setFilteredData(dummy)
+
             })
             .catch(error => {
                 console.error("Error:", error.message);
@@ -36,7 +43,7 @@ const Homepage = ({ setLoginUser, user }) => {
 
             });
 
-    }, [view, refetch])
+    }, [refetch])
     const [searchInput, setSearchInput] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
@@ -83,6 +90,7 @@ const Homepage = ({ setLoginUser, user }) => {
 
             if (response.status === 200) {
                 console.log('User deleted successfully:', response.data.message);
+                
                 setRefetch(!refetch)
             } else if (response.status === 404) {
                 console.log('User not found');
@@ -104,12 +112,12 @@ const Homepage = ({ setLoginUser, user }) => {
             setSortType(storedSortType);
 
         }
-       
+
     }, []);
 
     useEffect(() => {
         localStorage.setItem('storedList', JSON.stringify(list));
-        
+
     }, [list]);
 
     useEffect(() => {
@@ -143,47 +151,16 @@ const Homepage = ({ setLoginUser, user }) => {
                         <button onClick={() => handleSort('Z-A')}>Z-A</button>
                     </div>
                 </div>
+                <div style={{display:"flex", flexDirection:"row", justifyContent:"center",alignItems:"center"}}>
                 {
                     filteredData.length > 0 ? <>
-                        <div className="cardContainer">
-                            {filteredData.map((item) => {
-                                return (
-                                    <Card sx={{ manWidth: 275 }}>
-                                        <CardContent>
-                                            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                                    {item.name}
-                                                </Typography>
-
-                                            </div>
-                                            <Typography variant="body2">
-                                                {item.email}
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                {item.phone}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button size="small" onClick={() => {
-                                                setItem(item)
-                                                setView(true)
-                                            }}>View Detail</Button>
-                                            <img src={img2} style={{ cursor: "pointer" }} onClick={() => {
-                                                setItem(item);
-                                                doDelete(item);
-
-                                            }} />
-                                        </CardActions>
-                                    </Card>
-                                )
-
-                            })}
+                        <div style={{ marginTop: 8 }}>
+                            <Table filteredData={filteredData} setView={setView} setItem={setItem} doDelete={doDelete} />
                             <ViewDetailModel
                                 view={view}
                                 setView={setView}
                                 item={item}
                                 setItem={setItem} />
-
                         </div>
                     </> : <>
                         <div style={{ alignItems: "center", height: "100%", display: "flex", justifyContent: "center", flexDirection: "column" }}>
@@ -192,6 +169,7 @@ const Homepage = ({ setLoginUser, user }) => {
                         </div>
                     </>
                 }
+                </div>
             </div>
 
 

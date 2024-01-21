@@ -13,7 +13,7 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-const AddUser = ({userData}) => {
+const AddUser = ({ userData }) => {
 
     const history = useHistory()
 
@@ -30,10 +30,26 @@ const AddUser = ({userData}) => {
             [name]: value
         })
     }
+    const generateNew = () => {
+        for (let i = 0; i < 100; i++) {
+            let obj = {
+                name: `person${i}`,
+                email: `person${i}@gmail.com`,
+                phone: 9999999990
+            }
+            axios.post("http://localhost:9002/addUser", {
+                ...obj,
+                user: userData._id
+            })
+                .then(res => {
+                    console.log("added");
+                })
+        }
+    }
 
     const addNew = () => {
         const { name, email, phone } = user
-        if (name && email && phone ) {
+        if (name && email && phone) {
             axios.post("http://localhost:9002/addUser", {
                 ...user,
                 user: userData._id
@@ -74,7 +90,7 @@ const AddUser = ({userData}) => {
                 <Button className="button" onClick={handelClose} >Cancel</Button>
 
             </div>
-
+            {/* <Box onClick={generateNew}>add 100 </Box> */}
 
         </div>
     )
